@@ -10,3 +10,7 @@
 #golang
 /.go
 go.sum
+
+cmd/main/main.exe
+ui/yarn.lock
+

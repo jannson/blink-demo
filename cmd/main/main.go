@@ -1,10 +1,12 @@
 package main
 
 import (
-	"blink-demo/ui/bin"
-	"github.com/elazarl/go-bindata-assetfs"
-	"github.com/raintean/blink"
 	"log"
+
+	ui "blink-demo/ui/bin"
+
+	assetfs "github.com/elazarl/go-bindata-assetfs"
+	"github.com/raintean/blink"
 )
 
 func main() {
