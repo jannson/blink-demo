@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	"github.com/lxn/win"
 	"github.com/raintean/blink"
 )
@@ -12,6 +14,7 @@ func showLogo() {
 		117, 133,
 		int(win.GetSystemMetrics(win.SM_CXSCREEN)/5*4),
 		int(win.GetSystemMetrics(win.SM_CYSCREEN)/5))
+	log.Println("create logo win ok")
 
 	logoWin.LoadURL(uiAddress + "index.html#/logo")
 	logoWin.HideDockIcon()

@@ -6,18 +6,23 @@ import (
 	ui "blink-demo/ui/bin"
 
 	assetfs "github.com/elazarl/go-bindata-assetfs"
+	"github.com/jannson/walk"
 	"github.com/raintean/blink"
 )
 
 func main() {
-	//退出信号
-	exit := make(chan bool)
+	walk.AddDispatchHook(blink.DispatchBlinkMessage)
 
-	//启用调试模式
+	mw, err := walk.NewMainWindow()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	blink.SetDebugMode(true)
 
-	//初始化blink
-	err := blink.InitBlink()
+	err = blink.PreInitBlink(func(f func()) {
+		mw.Synchronize(f)
+	})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -30,8 +35,7 @@ func main() {
 	})
 
 	//显示logo小图标
-	showLogo()
+	go showLogo()
 
-	//等待退出
-	<-exit
+	mw.Run()
 }
