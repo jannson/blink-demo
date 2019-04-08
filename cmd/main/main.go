@@ -66,6 +66,12 @@ func notifyIcon(mw *walk.MainWindow) *walk.NotifyIcon {
 		log.Fatal(err)
 	}
 
+	// Test action2
+	action2 := walk.NewAction()
+	action2.SetText("R&unning")
+	action2.SetChecked(true)
+	ni.ContextMenu().Actions().Add(action2)
+
 	// The notify icon is hidden initially, so we have to make it visible.
 	if err := ni.SetVisible(true); err != nil {
 		log.Fatal(err)
