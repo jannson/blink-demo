@@ -3,14 +3,17 @@ package main
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"image/png"
 	"log"
+	"path/filepath"
 
-	ui "blink-demo/ui/bin"
+	ui "github.com/jannson/blink-demo/ui/bin"
+	"github.com/kardianos/osext"
 
 	assetfs "github.com/elazarl/go-bindata-assetfs"
+	"github.com/jannson/miniblink"
 	"github.com/jannson/walk"
-	"github.com/raintean/blink"
 )
 
 func notifyIcon(mw *walk.MainWindow) *walk.NotifyIcon {
@@ -48,7 +51,7 @@ func notifyIcon(mw *walk.MainWindow) *walk.NotifyIcon {
 			return
 		}
 
-		if err := ni.ShowCustom(
+		if err := ni.ShowMessage(
 			"Walk NotifyIcon Example",
 			"There are multiple ShowX methods sporting different icons."); err != nil {
 
@@ -86,24 +89,32 @@ func notifyIcon(mw *walk.MainWindow) *walk.NotifyIcon {
 }
 
 func main() {
-	walk.AddDispatchHook(blink.DispatchBlinkMessage)
+	walk.AddDispatchHook(miniblink.DispatchBlinkMessage)
 
 	mw, err := walk.NewMainWindow()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	blink.SetDebugMode(true)
+	miniblink.SetDebugMode(true)
 
-	err = blink.PreInitBlink(func(f func()) {
-		mw.Synchronize(f)
-	})
+	execdir, err := osext.Executable()
+	binaryPath := filepath.Dir(execdir)
+	fmt.Println("binaryPath=", binaryPath)
+
+	err = miniblink.PreInitBlink(
+		filepath.Join(binaryPath, "plugins", "ui.dll"),
+		filepath.Join(binaryPath, "plugins", "npvideo.dll"),
+		filepath.Join(binaryPath, "runtime"),
+		func(f func()) {
+			mw.Synchronize(f)
+		})
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	//挂载嵌入资源到虚拟文件系统
-	blink.RegisterFileSystem("app", &assetfs.AssetFS{
+	miniblink.RegisterFileSystem("app", &assetfs.AssetFS{
 		Asset:     ui.Asset,
 		AssetDir:  ui.AssetDir,
 		AssetInfo: ui.AssetInfo,

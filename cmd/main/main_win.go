@@ -1,14 +1,16 @@
 package main
 
-import "github.com/raintean/blink"
+import (
+	"github.com/jannson/miniblink"
+)
 
-var mainWin *blink.WebView
+var mainWin *miniblink.WebView
 
 func showMain() {
 	if mainWin == nil {
 		//窗口不存在,新建一个
-		mainWin = blink.NewWebView(false, 1366, 920)
-		mainWin.LoadURL("http://192.168.100.1:8899")
+		mainWin = miniblink.NewWebView(false, true, 1366, 920)
+		mainWin.LoadURL("http://127.0.0.1:8896")
 		mainWin.SetWindowIcon(uiAddress + "app.icon")
 		mainWin.SetWindowTitle("易有云")
 		mainWin.MoveToCenter()
@@ -16,7 +18,7 @@ func showMain() {
 		mainWin.ToTop()
 
 		//当窗口被销毁的时候,变量=nil
-		mainWin.On("destroy", func(_ *blink.WebView) {
+		mainWin.On("destroy", func(_ *miniblink.WebView) {
 			mainWin = nil
 		})
 	} else {
